@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Locations</title>
+</head>
+<body>
+    <h1>Location List</h1>
+    <ul>
+        {% for location in locations %}
+            <li>Latitude: {{ location.latitude }} | Longitude: {{ location.longitude }}</li>
+        {% empty %}
+            <li>No locations found.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
