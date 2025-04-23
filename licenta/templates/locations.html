@@ -1,9 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Locations</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block content %}
+    
     <h1>Locations</h1>
     <ul>
         {% for location in locations %}
@@ -12,5 +10,5 @@
             <li>No locations found.</li>
         {% endfor %}
     </ul>
-</body>
-</html>
+
+{% endblock  %}
