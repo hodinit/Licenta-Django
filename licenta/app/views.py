@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Location
 
+
 def hello_world(request):
     return HttpResponse("hello, world")
 
@@ -12,8 +13,7 @@ def location_list(request):
 def homepage(request):
     return render(request, 'homepage.html')
 
-def signup(request):
-    return HttpResponse("signup page")
+
 
 def login(request):
     return HttpResponse("login page")
