@@ -8,3 +8,15 @@ def hello_world(request):
 def location_list(request):
     locations = Location.objects.all()
     return render(request, 'locations.html', {'locations': locations})
+
+def homepage(request):
+    return render(request, 'homepage.html')
+
+def signup(request):
+    return HttpResponse("signup page")
+
+def login(request):
+    return HttpResponse("login page")
+
+def form(request):
+    return HttpResponse("new spot submit form")
