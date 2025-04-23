@@ -1,6 +1,9 @@
 from django.db import models
+from djongo import models as djongo_models
+from bson import ObjectId
 
 class Location(models.Model):
+    _id = djongo_models.ObjectIdField(primary_key=True, default=ObjectId)
     latitude = models.FloatField()
     longitude = models.FloatField()
 
