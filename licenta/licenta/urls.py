@@ -25,5 +25,5 @@ urlpatterns = [
     path('signup/', acc_views.signup, name='signup'),
     path('login/', views.login, name='login'),
     path('locations/', views.location_list, name='locations'),
-    path('form/', views.form, name='form'),
+    path('addspot/', views.addspot, name='addspot'),
 ]

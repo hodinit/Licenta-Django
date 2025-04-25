@@ -16,7 +16,7 @@ def homepage(request):
 
 
 def login(request):
-    return HttpResponse("login page")
+    return render(request, 'login.html')
 
-def form(request):
-    return HttpResponse("new spot submit form")
+def addspot(request):
+    return render(request, 'addspot.html')
