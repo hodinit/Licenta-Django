@@ -13,10 +13,5 @@ def location_list(request):
 def homepage(request):
     return render(request, 'homepage.html')
 
-
-
-def login(request):
-    return render(request, 'login.html')
-
 def addspot(request):
     return render(request, 'addspot.html')
