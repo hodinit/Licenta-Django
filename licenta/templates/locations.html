@@ -1,18 +1,60 @@
 {% extends 'base.html' %}
 
+{% block extra_head %}
+<style>
+    #map {
+        height: 500px;
+        width: 100%;
+        margin-top: 20px;
+    }
+</style>
+{% endblock %}
+
 {% block title %}
-    Nearest Spot
-{% endblock  %}
+    Find Nearest Spot
+{% endblock %}
 
 {% block content %}
-    
-    <h1>Locations</h1>
-    <ul>
-        {% for location in locations %}
-            <li>Latitude: {{ location.latitude }} | Longitude: {{ location.longitude }}</li>
-        {% empty %}
-            <li>No locations found.</li>
-        {% endfor %}
-    </ul>
+<div class="container">
+    <h1 class="text-center mb-4">Find Nearest Parking Spot</h1>
+    <div id="map"></div>
+</div>
 
-{% endblock  %}
+<script>
+    // Initialize the map centered on a default location
+    const map = L.map('map').setView([44.4268, 26.1025], 13); // Default to Bucharest
+
+    // Add the OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Get user's location
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            const userLat = position.coords.latitude;
+            const userLng = position.coords.longitude;
+            
+            // Center map on user's location
+            map.setView([userLat, userLng], 15);
+
+            // Add marker for user's location
+            const userMarker = L.marker([userLat, userLng])
+                .addTo(map)
+                .bindPopup('You are here')
+                .openPopup();
+
+            // Here we'll later add code to:
+            // 1. Load nearby parking spots from the database
+            // 2. Calculate distances to find the nearest spot
+            // 3. Draw the route to the nearest spot
+        }, function(error) {
+            console.error("Error getting location:", error);
+            alert("Unable to get your location. Please enable location services.");
+        });
+    } else {
+        alert("Geolocation is not supported by your browser");
+    }
+</script>
+{% endblock %}
