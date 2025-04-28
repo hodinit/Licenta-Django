@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="container text-center mt-5">
+        <h1 class="mb-4">Homepage</h1>
+        <div class="d-flex flex-column align-items-center">
+            <a class="btn btn-primary btn-lg mb-3 w-50" href="{% url 'signup' %}" role="button">Sign Up</a>
+            <a class="btn btn-secondary btn-lg mb-3 w-50" href="{% url 'login' %}" role="button">Log In</a>
+            <a class="btn btn-success btn-lg mb-3 w-50" href="{% url 'locations' %}" role="button">Find Nearest Spot</a>
+            <a class="btn btn-warning btn-lg mb-3 w-50" href="{% url 'addspot' %}" role="button">Add Spot</a>
+        </div>
+    </div>
+    
+{% endblock %}

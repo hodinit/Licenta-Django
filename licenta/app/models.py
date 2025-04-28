@@ -1,3 +1,12 @@
 from django.db import models
+from djongo import models as djongo_models
+from bson import ObjectId
 
-# Create your models here.
+class Location(models.Model):
+    _id = djongo_models.ObjectIdField(primary_key=True, default=ObjectId)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+
+    class Meta:
+        db_table = "locations"
+
