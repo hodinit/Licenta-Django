@@ -7,6 +7,15 @@
         width: 100%;
         margin-top: 20px;
     }
+    #error-message {
+        display: none;
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 4px;
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
 </style>
 {% endblock %}
 
@@ -17,6 +26,7 @@
 {% block content %}
 <div class="container">
     <h1 class="text-center mb-4">Find Nearest Parking Spot</h1>
+    <div id="error-message"></div>
     <div id="map"></div>
 </div>
 
@@ -27,8 +37,25 @@
     // Add the OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
-        attribution: '© OpenStreetMap contributors'
     }).addTo(map);
+
+    // Create an icon for parking spots
+    const parkingIcon = L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+    });
+
+    // Add parking spot markers from the database
+    const parkingSpots = JSON.parse('{{ locations|escapejs }}');
+    if (parkingSpots && parkingSpots.length) {
+        parkingSpots.forEach(spot => {
+            L.marker([spot.latitude, spot.longitude], {icon: parkingIcon})
+             .addTo(map)
+             .bindPopup('Parking Spot');
+        });
+    }
 
     // Get user's location
     if ("geolocation" in navigator) {
@@ -39,22 +66,40 @@
             // Center map on user's location
             map.setView([userLat, userLng], 15);
 
-            // Add marker for user's location
-            const userMarker = L.marker([userLat, userLng])
+            // Add marker for user's location with a different color
+            const userIcon = L.icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+            });
+
+            const userMarker = L.marker([userLat, userLng], {icon: userIcon})
                 .addTo(map)
                 .bindPopup('You are here')
                 .openPopup();
 
-            // Here we'll later add code to:
-            // 1. Load nearby parking spots from the database
-            // 2. Calculate distances to find the nearest spot
-            // 3. Draw the route to the nearest spot
         }, function(error) {
-            console.error("Error getting location:", error);
-            alert("Unable to get your location. Please enable location services.");
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.style.display = 'block';
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    errorDiv.textContent = "Please enable location services to find parking spots near you.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorDiv.textContent = "Location information is unavailable.";
+                    break;
+                case error.TIMEOUT:
+                    errorDiv.textContent = "Location request timed out.";
+                    break;
+                default:
+                    errorDiv.textContent = "An unknown error occurred while getting your location.";
+            }
         });
     } else {
-        alert("Geolocation is not supported by your browser");
+        const errorDiv = document.getElementById('error-message');
+        errorDiv.style.display = 'block';
+        errorDiv.textContent = "Geolocation is not supported by your browser";
     }
 </script>
 {% endblock %}

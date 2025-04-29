@@ -1,14 +1,17 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.core.serializers import serialize
 from .models import Location
-
+import json
 
 def hello_world(request):
     return HttpResponse("hello, world")
 
 def location_list(request):
     locations = Location.objects.all()
-    return render(request, 'locations.html', {'locations': locations})
+    # Convert QuerySet to a list of dictionaries
+    locations_list = [{'latitude': loc.latitude, 'longitude': loc.longitude} for loc in locations]
+    return render(request, 'locations.html', {'locations': json.dumps(locations_list)})
 
 def homepage(request):
     return render(request, 'homepage.html')
