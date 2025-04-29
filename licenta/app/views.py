@@ -9,8 +9,7 @@ def hello_world(request):
 
 def location_list(request):
     locations = Location.objects.all()
-    # Convert QuerySet to a list of dictionaries
-    locations_list = [{'latitude': loc.latitude, 'longitude': loc.longitude} for loc in locations]
+    locations_list = [{'name': loc.name, 'latitude': loc.latitude, 'longitude': loc.longitude} for loc in locations]
     return render(request, 'locations.html', {'locations': json.dumps(locations_list)})
 
 def homepage(request):
