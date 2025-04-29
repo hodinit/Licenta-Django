@@ -3,7 +3,7 @@ from djongo import models as djongo_models
 from bson import ObjectId
 
 class Location(models.Model):
-    _id = djongo_models.ObjectIdField(primary_key=True, default=ObjectId)
+    name = models.CharField(max_length=50)
     latitude = models.FloatField()
     longitude = models.FloatField()
 

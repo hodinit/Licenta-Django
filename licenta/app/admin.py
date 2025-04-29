@@ -3,4 +3,4 @@ from .models import Location
 
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
-    list_display = ('_id', 'latitude', 'longitude')
+    list_display = ('name', 'latitude', 'longitude')
