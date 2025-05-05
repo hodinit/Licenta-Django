@@ -41,11 +41,6 @@ navigator.geolocation.getCurrentPosition(function(position) {
 
 let marker = null;
 
-// Handle map clicks to set location
-map.on('click', function(e) {
-    setLocation(e.latlng.lat, e.latlng.lng);
-});
-
 function setLocation(lat, lng) {
     if (marker) {
         marker.setLatLng([lat, lng]);
@@ -57,38 +52,12 @@ function setLocation(lat, lng) {
     map.setView([lat, lng], 15);
 }
 
-// Use current location
+map.on('click', function(spot) {
+    setLocation(spot.latlng.lat, spot.latlng.lng);
+});
+
 function useCurrentLocation() {
-    if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            setLocation(position.coords.latitude, position.coords.longitude);
-        }, function(error) {
-            alert("Error getting location: " + error.message);
-        });
-    } else {
-        alert("Geolocation is not supported by your browser");
-    }
+    navigator.geolocation.getCurrentPosition(function(position) {
+        setLocation(position.coords.latitude, position.coords.longitude);
+    })
 }
-
-// Image preview
-function previewImage(input) {
-    const preview = document.getElementById('preview');
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            preview.src = e.target.result;
-            preview.classList.remove('d-none');
-        }
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-
-// Form validation
-document.getElementById('addSpotForm').onsubmit = function(e) {
-    if (!document.getElementById('latitude').value || !document.getElementById('longitude').value) {
-        e.preventDefault();
-        alert('Please select a location on the map');
-        return false;
-    }
-    return true;
-};
