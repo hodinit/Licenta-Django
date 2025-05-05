@@ -5,10 +5,10 @@ class LocationForm(forms.ModelForm):
     class Meta:
         model = Location
         fields = ['name', 'latitude', 'longitude', 'description', 'image', 'available']
-        widgets = {
-            'latitude': forms.HiddenInput(),
-            'longitude': forms.HiddenInput(),
-        }
+        # widgets = {
+        #     'latitude': forms.HiddenInput(),
+        #     'longitude': forms.HiddenInput(),
+        # }
 
     def clean(self):
         cleaned_data = super().clean()

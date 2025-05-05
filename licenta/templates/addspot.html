@@ -1,27 +1,7 @@
 {% extends 'base.html' %}
-{% load static %}
 
 {% block title %}
     Add Spot
-{% endblock %}
-
-{% block extra_head %}
-<link rel="stylesheet" href="{% static 'css/app.css' %}">
-<style>
-    .preview-image {
-        max-width: 100%;
-        max-height: 200px;
-        margin-top: 10px;
-    }
-    .form-container {
-        max-width: 800px;
-        margin: 0 auto;
-    }
-    #map {
-        height: 400px;
-        margin-bottom: 20px;
-    }
-</style>
 {% endblock %}
 
 {% block content %}
@@ -29,35 +9,12 @@
     <div class="form-container">
         <h2 class="mb-4">Add New Parking Spot</h2>
         
-        {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-            {% endfor %}
-        </div>
-        {% endif %}
-
-        {% if form.non_field_errors %}
-        <div class="alert alert-danger">
-            {% for error in form.non_field_errors %}
-                {{ error }}
-            {% endfor %}
-        </div>
-        {% endif %}
-        
         <form method="POST" enctype="multipart/form-data" id="addSpotForm">
             {% csrf_token %}
             <div class="mb-3">
                 <label for="name" class="form-label">Spot Name</label>
-                <input type="text" class="form-control {% if form.name.errors %}is-invalid{% endif %}" 
+                <input type="text" class="form-control" 
                        id="name" name="name" required value="{{ form.name.value|default:'' }}">
-                {% if form.name.errors %}
-                <div class="invalid-feedback">
-                    {{ form.name.errors }}
-                </div>
-                {% endif %}
             </div>
 
             <div class="mb-3">
@@ -66,34 +23,19 @@
                 <input type="hidden" id="latitude" name="latitude" required value="{{ form.latitude.value|default:'' }}">
                 <input type="hidden" id="longitude" name="longitude" required value="{{ form.longitude.value|default:'' }}">
                 <small class="text-muted">Click on the map to set the location or use your current location</small>
-                {% if form.latitude.errors or form.longitude.errors %}
-                <div class="text-danger">
-                    {{ form.latitude.errors }}
-                    {{ form.longitude.errors }}
-                </div>
-                {% endif %}
             </div>
+            <button type="button" class="btn btn-primary mb-3" onclick="useCurrentLocation()">Use My Location</button>
 
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
-                <textarea class="form-control {% if form.description.errors %}is-invalid{% endif %}" 
+                <textarea class="form-control" 
                           id="description" name="description" rows="3">{{ form.description.value|default:'' }}</textarea>
-                {% if form.description.errors %}
-                <div class="invalid-feedback">
-                    {{ form.description.errors }}
-                </div>
-                {% endif %}
             </div>
 
             <div class="mb-3">
                 <label for="image" class="form-label">Image</label>
-                <input type="file" class="form-control {% if form.image.errors %}is-invalid{% endif %}" 
+                <input type="file" class="form-control" 
                        id="image" name="image" accept="image/*" onchange="previewImage(this);">
-                {% if form.image.errors %}
-                <div class="invalid-feedback">
-                    {{ form.image.errors }}
-                </div>
-                {% endif %}
                 <img id="preview" class="preview-image d-none">
             </div>
 
@@ -105,15 +47,9 @@
                         Spot is currently available
                     </label>
                 </div>
-                {% if form.available.errors %}
-                <div class="text-danger">
-                    {{ form.available.errors }}
-                </div>
-                {% endif %}
             </div>
 
-            <button type="submit" class="btn btn-primary">Add Spot</button>
-            <button type="button" class="btn btn-secondary" onclick="useCurrentLocation()">Use My Location</button>
+            <button type="submit" class="btn btn-primary mb-5">Add Spot</button>
         </form>
     </div>
 </div>
