@@ -10,10 +10,10 @@ class Location(models.Model):
     longitude = models.FloatField()
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='parking_spots/', null=True, blank=True)
-    available = models.BooleanField(default=True)  # True=spot is available, False=spot is occupied
+    available = models.BooleanField(default=True)
     added_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    created_at = models.DateField(auto_now_add=True)  # Changed from DateTimeField to DateField
-    updated_at = models.DateField(auto_now=True)      # Changed from DateTimeField to DateField
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = "locations"

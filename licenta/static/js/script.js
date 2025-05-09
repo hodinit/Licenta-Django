@@ -16,7 +16,6 @@ const userIcon = L.icon({
     popupAnchor: [1, -34],
 });
 
-// parkingSpots must be injected into the template from backend
 if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
     parkingSpots.forEach(spot => {
         L.marker([spot.latitude, spot.longitude], {icon: parkingIcon})
@@ -37,7 +36,9 @@ navigator.geolocation.getCurrentPosition(function(position) {
         .openPopup();
 });
 
-// addspot
+
+
+
 
 let marker = null;
 
