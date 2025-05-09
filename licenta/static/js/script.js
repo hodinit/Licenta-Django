@@ -39,9 +39,6 @@ navigator.geolocation.getCurrentPosition(function(position) {
 
 
 
-
-let marker = null;
-
 function setLocation(lat, lng) {
     if (marker) {
         marker.setLatLng([lat, lng]);
