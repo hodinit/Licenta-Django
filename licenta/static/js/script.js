@@ -34,10 +34,51 @@ navigator.geolocation.getCurrentPosition(function(position) {
         .addTo(map)
         .bindPopup('Current location')
         .openPopup();
+
+    // Find nearest parking spot
+    if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
+        let nearestSpot = null;
+        let shortestDistance = Infinity;
+
+        parkingSpots.forEach(spot => {
+            // Calculate distance using Haversine formula
+            const R = 6371; // Earth's radius in km
+            const dLat = toRad(spot.latitude - userLat);
+            const dLon = toRad(spot.longitude - userLng);
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                     Math.cos(toRad(userLat)) * Math.cos(toRad(spot.latitude)) * 
+                     Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            const distance = R * c;
+
+            if (distance < shortestDistance) {
+                shortestDistance = distance;
+                nearestSpot = spot;
+            }
+        });
+
+        if (nearestSpot) {            // Create route to nearest spot
+            L.Routing.control({
+                waypoints: [
+                    L.latLng(userLat, userLng),
+                    L.latLng(nearestSpot.latitude, nearestSpot.longitude)
+                ],
+                show: false,               // Hide the routing interface
+                draggableWaypoints: false, // Prevent waypoints from being dragged
+                routeWhileDragging: false, // Prevent route updates while dragging
+                addWaypoints: false,       // Prevent adding new waypoints
+                lineOptions: {
+                    styles: [{ color: '#0000FF', opacity: 1, weight: 5 }]  // Blue semi-transparent line
+                },
+                createMarker: function() { return null }  // Don't create waypoint markers
+            }).addTo(map);
+        }
+    }
 });
 
-
-
+function toRad(degrees) {
+    return degrees * Math.PI / 180;
+}
 
 function setLocation(lat, lng) {
     if (marker) {
@@ -56,14 +97,5 @@ map.on('click', function(spot) {
 
 function useCurrentLocation() {
     navigator.geolocation.getCurrentPosition(function(position) {
-        setLocation(position.coords.latitude, position.coords.longitude);
-    })
+        setLocation(position.coords.latitude, position.coords.longitude);    })
 }
-
-L.Routing.control({
-    waypoints: [
-        L.latLng(46.561455, 23.816923),
-        L.latLng(46.554785943920585, 23.777292966624376)
-    ],
-    routeWhileDragging: false
-}).addTo(map);
