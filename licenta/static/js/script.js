@@ -59,3 +59,11 @@ function useCurrentLocation() {
         setLocation(position.coords.latitude, position.coords.longitude);
     })
 }
+
+L.Routing.control({
+    waypoints: [
+        L.latLng(46.561455, 23.816923),
+        L.latLng(46.554785943920585, 23.777292966624376)
+    ],
+    routeWhileDragging: false
+}).addTo(map);
