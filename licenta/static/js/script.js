@@ -27,11 +27,14 @@ if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
     parkingSpots.forEach(spot => {
         const icon = spot.approved ? newSpotIcon : parkingIcon;
         const popupContent = `
-            <div style="text-align: center;">
-            <h4>${spot.name}</h4>
-            <img src="${spot.image}" alt="Location Image" style="width: 100px; height: auto;" />
+            <div class="container text-center">
+                <h4>${spot.name}</h4>
+                <img src="${spot.image}" alt="Location Image" style="width: 100px; height: auto;" />
+                <br>
+                <a class="btn btn-success mt-3">Is this spot real?</a>
             </div>
         `;
+
         L.marker([spot.latitude, spot.longitude], {icon: icon})
         .addTo(map)
         .bindPopup(popupContent);
