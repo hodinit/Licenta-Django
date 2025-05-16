@@ -14,7 +14,8 @@ def location_list(request):
     locations_list = [{
         'name': loc.name,
         'latitude': loc.latitude, 
-        'longitude': loc.longitude, 
+        'longitude': loc.longitude,
+        'image': loc.image.url if loc.image and loc.image.name else None,
         'approved': loc.approved} 
         for loc in locations]
     return render(request, 'locations.html', {'locations': json.dumps(locations_list)})

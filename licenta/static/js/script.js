@@ -26,9 +26,15 @@ const newSpotIcon = L.icon({
 if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
     parkingSpots.forEach(spot => {
         const icon = spot.approved ? newSpotIcon : parkingIcon;
+        const popupContent = `
+            <div style="text-align: center;">
+            <h4>${spot.name}</h4>
+            <img src="${spot.image}" alt="Location Image" style="width: 100px; height: auto;" />
+            </div>
+        `;
         L.marker([spot.latitude, spot.longitude], {icon: icon})
         .addTo(map)
-        .bindPopup(spot.name);
+        .bindPopup(popupContent);
     });
 }
 
