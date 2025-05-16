@@ -11,7 +11,12 @@ def hello_world(request):
 
 def location_list(request):
     locations = Location.objects.all()
-    locations_list = [{'name': loc.name, 'latitude': loc.latitude, 'longitude': loc.longitude} for loc in locations]
+    locations_list = [{
+        'name': loc.name,
+        'latitude': loc.latitude, 
+        'longitude': loc.longitude, 
+        'approved': loc.approved} 
+        for loc in locations]
     return render(request, 'locations.html', {'locations': json.dumps(locations_list)})
 
 def homepage(request):

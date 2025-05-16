@@ -16,9 +16,17 @@ const userIcon = L.icon({
     popupAnchor: [1, -34],
 });
 
+const newSpotIcon = L.icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+});
+
 if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
     parkingSpots.forEach(spot => {
-        L.marker([spot.latitude, spot.longitude], {icon: parkingIcon})
+        const icon = spot.approved ? newSpotIcon : parkingIcon;
+        L.marker([spot.latitude, spot.longitude], {icon: icon})
         .addTo(map)
         .bindPopup(spot.name);
     });
