@@ -51,7 +51,9 @@ navigator.geolocation.getCurrentPosition(function(position) {
     const userLat = position.coords.latitude;
     const userLng = position.coords.longitude;
     
-    map.setView([userLat, userLng], 15);    if (locationAlert) {
+    map.setView([userLat, userLng], 15);
+    
+    if (locationAlert) {
         locationAlert.style.display = 'none';
     }
     
@@ -78,7 +80,9 @@ navigator.geolocation.getCurrentPosition(function(position) {
                 shortestDistance = distance;
                 nearestSpot = spot;
             }
-        });        if (nearestSpot) {
+        });
+        
+        if (nearestSpot) {
             const routingControl = L.Routing.control({
                 waypoints: [
                     L.latLng(userLat, userLng),
