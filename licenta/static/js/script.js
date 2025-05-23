@@ -41,15 +41,20 @@ if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
     });
 }
 
-window.alert("Getting your location...");
+const locationAlert = document.getElementById('locationAlert');
+if (locationAlert) {
+    locationAlert.style.display = 'block';
+}
 
 navigator.geolocation.getCurrentPosition(function(position) {
     
     const userLat = position.coords.latitude;
     const userLng = position.coords.longitude;
     
-    map.setView([userLat, userLng], 15);
-
+    map.setView([userLat, userLng], 15);    if (locationAlert) {
+        locationAlert.style.display = 'none';
+    }
+    
     const userMarker = L.marker([userLat, userLng], {icon: userIcon})
         .addTo(map)
         .bindPopup('Current location')
@@ -73,10 +78,8 @@ navigator.geolocation.getCurrentPosition(function(position) {
                 shortestDistance = distance;
                 nearestSpot = spot;
             }
-        });
-
-        if (nearestSpot) {
-            L.Routing.control({
+        });        if (nearestSpot) {
+            const routingControl = L.Routing.control({
                 waypoints: [
                     L.latLng(userLat, userLng),
                     L.latLng(nearestSpot.latitude, nearestSpot.longitude)
@@ -90,6 +93,21 @@ navigator.geolocation.getCurrentPosition(function(position) {
                 },
                 createMarker: function() { return null }
             }).addTo(map);
+
+            const toggleButton = document.getElementById('toggleRoute');
+            toggleButton.style.display = 'block';
+            let isRouteVisible = true;
+
+            toggleButton.addEventListener('click', function() {
+                if (isRouteVisible) {
+                    routingControl.remove();
+                    toggleButton.textContent = 'Show Route';
+                } else {
+                    routingControl.addTo(map);
+                    toggleButton.textContent = 'Hide Route';
+                }
+                isRouteVisible = !isRouteVisible;
+            });
         }
     }
 });
@@ -114,6 +132,37 @@ map.on('click', function(spot) {
 });
 
 function useCurrentLocation() {
-    navigator.geolocation.getCurrentPosition(function(position) {
-        setLocation(position.coords.latitude, position.coords.longitude);    })
+    const locationAlert = document.getElementById('locationAlert');
+    if (locationAlert) {
+        locationAlert.style.display = 'block';
+    }
+
+    navigator.geolocation.getCurrentPosition(
+        function(position) {
+            if (locationAlert) {
+                locationAlert.style.display = 'none';
+            }
+            setLocation(position.coords.latitude, position.coords.longitude);
+        },
+        function(error) {
+            if (locationAlert) {
+                locationAlert.style.display = 'none';
+            }
+            // Handle errors
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("Please enable location services to use this feature.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("Location information is unavailable.");
+                    break;
+                case error.TIMEOUT:
+                    alert("The request to get user location timed out.");
+                    break;
+                default:
+                    alert("An unknown error occurred while getting location.");
+                    break;
+            }
+        }
+    );
 }

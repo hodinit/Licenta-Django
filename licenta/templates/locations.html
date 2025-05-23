@@ -8,15 +8,16 @@
 
 <style>
     #map {
-    width: 100vw;
-    height: calc(100vh - 56px);
-    position: fixed;
-    top: 56px;
-    left: 0;
-}
+        width: 100vw;
+        height: calc(100vh - 56px);
+        position: fixed;
+        top: 56px;
+        left: 0;
+    }
 </style>
 
 <div id="map"></div>
+<button id="toggleRoute" class="btn btn-primary">Hide Route</button>
 
 <script>
     const parkingSpots = JSON.parse('{{ locations|escapejs }}');
