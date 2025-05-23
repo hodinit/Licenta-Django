@@ -41,7 +41,10 @@ if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
     });
 }
 
+window.alert("Getting your location...");
+
 navigator.geolocation.getCurrentPosition(function(position) {
+    
     const userLat = position.coords.latitude;
     const userLng = position.coords.longitude;
     
@@ -52,14 +55,12 @@ navigator.geolocation.getCurrentPosition(function(position) {
         .bindPopup('Current location')
         .openPopup();
 
-    // Find nearest parking spot
     if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
         let nearestSpot = null;
         let shortestDistance = Infinity;
 
         parkingSpots.forEach(spot => {
-            // Calculate distance using Haversine formula
-            const R = 6371; // Earth's radius in km
+            const R = 6371;
             const dLat = toRad(spot.latitude - userLat);
             const dLon = toRad(spot.longitude - userLng);
             const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
@@ -74,20 +75,20 @@ navigator.geolocation.getCurrentPosition(function(position) {
             }
         });
 
-        if (nearestSpot) {            // Create route to nearest spot
+        if (nearestSpot) {
             L.Routing.control({
                 waypoints: [
                     L.latLng(userLat, userLng),
                     L.latLng(nearestSpot.latitude, nearestSpot.longitude)
                 ],
-                show: false,               // Hide the routing interface
-                draggableWaypoints: false, // Prevent waypoints from being dragged
-                routeWhileDragging: false, // Prevent route updates while dragging
-                addWaypoints: false,       // Prevent adding new waypoints
+                show: false,
+                draggableWaypoints: false,
+                routeWhileDragging: false,
+                addWaypoints: false,
                 lineOptions: {
-                    styles: [{ color: '#0000FF', opacity: 1, weight: 5 }]  // Blue semi-transparent line
+                    styles: [{ color: '#0000FF', opacity: 1, weight: 5 }]
                 },
-                createMarker: function() { return null }  // Don't create waypoint markers
+                createMarker: function() { return null }
             }).addTo(map);
         }
     }
