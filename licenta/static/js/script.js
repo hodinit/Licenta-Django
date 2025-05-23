@@ -143,26 +143,6 @@ function useCurrentLocation() {
                 locationAlert.style.display = 'none';
             }
             setLocation(position.coords.latitude, position.coords.longitude);
-        },
-        function(error) {
-            if (locationAlert) {
-                locationAlert.style.display = 'none';
-            }
-            // Handle errors
-            switch(error.code) {
-                case error.PERMISSION_DENIED:
-                    alert("Please enable location services to use this feature.");
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    alert("Location information is unavailable.");
-                    break;
-                case error.TIMEOUT:
-                    alert("The request to get user location timed out.");
-                    break;
-                default:
-                    alert("An unknown error occurred while getting location.");
-                    break;
-            }
         }
     );
 }
