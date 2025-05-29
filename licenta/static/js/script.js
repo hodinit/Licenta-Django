@@ -29,11 +29,10 @@ if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
         const popupContent = `
             <div class="container text-center">
                 <h4>${spot.name}</h4>
-                ${spot.image ? `<img src="${spot.image}" alt="Location Image" style="width: 100px; height: auto;" /><br>` : ''}                <div class="payment-info mt-2">
-                    <strong>Payment Type:</strong> ${spot.payment ? spot.payment.payment_type : 'FREE'}<br>
-                    ${spot.payment && spot.payment.hourly_rate && spot.payment.hourly_rate !== 'FREE' ? `<strong>Hourly Rate:</strong> ${spot.payment.hourly_rate}<br>` : ''}
-                    ${spot.payment && spot.payment.daily_rate && spot.payment.daily_rate !== 'FREE' ? `<strong>Daily Rate:</strong> ${spot.payment.daily_rate}<br>` : ''}
-                    <strong>Payment Methods:</strong> ${spot.payment ? spot.payment.payment_methods : 'None'}
+                <img src="${spot.image}" alt="Location Image" style="width: 100px; height: auto;" /><br>                <div class="payment-info mt-2">
+                    <strong>Payment Type:</strong> ${spot.payment.payment_type}<br>
+                    <strong>Fee:</strong> ${spot.payment.fee} ${spot.payment.currency}<br>
+                    <strong>Payment Methods:</strong> ${spot.payment.payment_methods}
                 </div>
                 <a class="btn btn-success mt-3">Is this spot real?</a>
             </div>
@@ -43,7 +42,17 @@ if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
         .addTo(map)
         .bindPopup(popupContent);
     });
-}
+}    function togglePaymentForm() {
+        const isFree = document.getElementById('is_free').checked;
+        const paymentForm = document.getElementById('paymentForm');
+        paymentForm.style.display = isFree ? 'none' : 'block';
+        
+        if (isFree) {
+            document.getElementById('fee').value = '0';
+            document.getElementById('currency').value = 'RON';
+            document.getElementById('payment_methods').value = 'None';
+        }
+    }
 
 const locationAlert = document.getElementById('locationAlert');
 if (locationAlert) {

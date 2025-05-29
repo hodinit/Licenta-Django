@@ -49,6 +49,41 @@
                 </div>
             </div>
 
+            <div class="mb-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="is_free" 
+                           name="is_free" checked onchange="togglePaymentForm()">
+                    <label class="form-check-label" for="is_free">
+                        This is a free parking spot
+                    </label>
+                </div>
+            </div>            <div id="paymentForm" class="mb-3" style="display: none;">
+                <h4>Payment Details</h4>
+                <div class="mb-3">
+                    <label for="fee" class="form-label">Fee</label>
+                    <input type="number" class="form-control" id="fee" 
+                           name="fee" step="0.01" min="0">
+                </div>
+
+                <div class="mb-3">
+                    <label for="currency" class="form-label">Currency</label>
+                    <select class="form-control" id="currency" name="currency">
+                        <option value="RON">RON</option>
+                        <option value="EUR">EUR</option>
+                        <option value="USD">USD</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="payment_methods" class="form-label">Payment Methods</label>
+                    <select class="form-control" id="payment_methods" name="payment_methods">
+                        <option value="Cash">Cash</option>
+                        <option value="Card">Card</option>
+                        <option value="Subscription">Subscription</option>
+                    </select>
+                </div>
+            </div>
+
             <button type="submit" class="btn btn-primary mb-5">Add Spot</button>
         </form>
     </div>
@@ -56,6 +91,7 @@
 
 <script>
     let marker = null;
+
 </script>
 
 {% endblock %}

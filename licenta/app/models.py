@@ -5,10 +5,10 @@ from django.utils import timezone
 
 class Payment(models.Model):  
     _id = djongo_models.ObjectIdField()
-    payment_type = models.CharField(max_length=10, default='FREE')
-    hourly_rate = models.DecimalField(max_digits=6, decimal_places=2, default='FREE')
-    daily_rate = models.DecimalField(max_digits=6, decimal_places=2, default='FREE')
-    payment_methods = models.CharField(max_length=50)
+    payment_type = models.CharField(max_length=10, default='Free')
+    fee = models.IntegerField()
+    currency = models.CharField(max_length=3, default='RON')
+    payment_methods = models.CharField(max_length=10)
 
     class Meta:
         db_table = "payment"
