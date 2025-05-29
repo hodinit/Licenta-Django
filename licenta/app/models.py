@@ -6,7 +6,7 @@ from django.utils import timezone
 class Payment(models.Model):  
     _id = djongo_models.ObjectIdField()
     payment_type = models.CharField(max_length=10, default='Free')
-    fee = models.IntegerField()
+    fee = models.IntegerField(default=0)
     currency = models.CharField(max_length=3, default='RON')
     payment_methods = models.CharField(max_length=10)
 
@@ -14,6 +14,7 @@ class Payment(models.Model):
         db_table = "payment"
 
 class Location(models.Model):
+    _id = models.IntegerField(primary_key=True)
     approved = models.BooleanField(default=False)
     name = models.CharField(max_length=50)
     latitude = models.FloatField()

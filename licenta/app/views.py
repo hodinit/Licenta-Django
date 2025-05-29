@@ -37,6 +37,10 @@ def addspot(request):
             spot = form.save(commit=False)
             spot.added_by = request.user
 
+            last_location = Location.objects.order_by('-_id').first()
+            new_location_id = 1 if last_location is None else last_location._id + 1
+            spot._id = new_location_id
+
             is_free = request.POST.get('is_free') == 'on'
 
             if is_free:
