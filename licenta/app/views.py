@@ -16,8 +16,15 @@ def location_list(request):
         'latitude': loc.latitude, 
         'longitude': loc.longitude,
         'image': loc.image.url if loc.image and loc.image.name else None,
-        'approved': loc.approved} 
-        for loc in locations]
+        'approved': loc.approved,
+        'payment': {
+            'payment_type': loc.payment.payment_type if loc.payment else 'FREE',
+            'hourly_rate': str(loc.payment.hourly_rate) if loc.payment and loc.payment.hourly_rate != 'FREE' else 'FREE',
+            'daily_rate': str(loc.payment.daily_rate) if loc.payment and loc.payment.daily_rate != 'FREE' else 'FREE',
+            'payment_methods': loc.payment.payment_methods if loc.payment else 'N/A'
+        } if loc.payment else None
+        
+        }for loc in locations]
     return render(request, 'locations.html', {'locations': json.dumps(locations_list)})
 
 def homepage(request):

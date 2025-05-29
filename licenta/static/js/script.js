@@ -29,8 +29,12 @@ if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
         const popupContent = `
             <div class="container text-center">
                 <h4>${spot.name}</h4>
-                <img src="${spot.image}" alt="Location Image" style="width: 100px; height: auto;" />
-                <br>
+                ${spot.image ? `<img src="${spot.image}" alt="Location Image" style="width: 100px; height: auto;" /><br>` : ''}                <div class="payment-info mt-2">
+                    <strong>Payment Type:</strong> ${spot.payment ? spot.payment.payment_type : 'FREE'}<br>
+                    ${spot.payment && spot.payment.hourly_rate && spot.payment.hourly_rate !== 'FREE' ? `<strong>Hourly Rate:</strong> ${spot.payment.hourly_rate}<br>` : ''}
+                    ${spot.payment && spot.payment.daily_rate && spot.payment.daily_rate !== 'FREE' ? `<strong>Daily Rate:</strong> ${spot.payment.daily_rate}<br>` : ''}
+                    <strong>Payment Methods:</strong> ${spot.payment ? spot.payment.payment_methods : 'None'}
+                </div>
                 <a class="btn btn-success mt-3">Is this spot real?</a>
             </div>
         `;
