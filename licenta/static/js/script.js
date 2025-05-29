@@ -42,17 +42,19 @@ if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
         .addTo(map)
         .bindPopup(popupContent);
     });
-}    function togglePaymentForm() {
-        const isFree = document.getElementById('is_free').checked;
-        const paymentForm = document.getElementById('paymentForm');
-        paymentForm.style.display = isFree ? 'none' : 'block';
-        
-        if (isFree) {
-            document.getElementById('fee').value = '0';
-            document.getElementById('currency').value = 'RON';
-            document.getElementById('payment_methods').value = 'None';
-        }
+}    
+
+function togglePaymentForm() {
+    const isFree = document.getElementById('is_free').checked;
+    const paymentForm = document.getElementById('paymentForm');
+    paymentForm.style.display = isFree ? 'none' : 'block';
+    
+    if (isFree) {
+        document.getElementById('fee').value = '0';
+        document.getElementById('currency').value = 'RON';
+        document.getElementById('payment_methods').value = 'None';
     }
+}
 
 const locationAlert = document.getElementById('locationAlert');
 if (locationAlert) {

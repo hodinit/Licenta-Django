@@ -57,12 +57,13 @@
                         This is a free parking spot
                     </label>
                 </div>
-            </div>            <div id="paymentForm" class="mb-3" style="display: none;">
+            </div>            
+            
+            <div id="paymentForm" class="mb-3" style="display: none;">
                 <h4>Payment Details</h4>
                 <div class="mb-3">
                     <label for="fee" class="form-label">Fee</label>
-                    <input type="number" class="form-control" id="fee" 
-                           name="fee" step="0.01" min="0">
+                    <input type="number" class="form-control" id="fee" name="fee" >
                 </div>
 
                 <div class="mb-3">
@@ -79,7 +80,6 @@
                     <select class="form-control" id="payment_methods" name="payment_methods">
                         <option value="Cash">Cash</option>
                         <option value="Card">Card</option>
-                        <option value="Subscription">Subscription</option>
                     </select>
                 </div>
             </div>

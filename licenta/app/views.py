@@ -18,11 +18,11 @@ def location_list(request):
         'image': loc.image.url if loc.image and loc.image.name else None,
         'approved': loc.approved,
         'payment': {
-            'payment_type': loc.payment.payment_type if loc.payment else 'Free',
-            'fee': str(loc.payment.fee) if loc.payment and loc.payment.fee != 'Free' else 'Free',
-            'currency': loc.payment.currency if loc.payment else 'RON',
-            'payment_methods': loc.payment.payment_methods if loc.payment else 'None'
-        } if loc.payment else None
+            'payment_type': loc.payment.payment_type,
+            'fee': str(loc.payment.fee),
+            'currency': loc.payment.currency,
+            'payment_methods': loc.payment.payment_methods
+        }
     } for loc in locations]
     return render(request, 'locations.html', {'locations': json.dumps(locations_list)})
 
@@ -38,23 +38,26 @@ def addspot(request):
             spot.added_by = request.user
 
             is_free = request.POST.get('is_free') == 'on'
-            payment = Payment()
-            
+
             if is_free:
-                payment.payment_type = 'Free'
-                payment.fee = 0
-                payment.currency = 'RON'
-                payment.payment_methods = 'None'
+                # Try to get an existing "Free" payment
+                payment, created = Payment.objects.get_or_create(
+                    payment_type='Free',
+                    fee=0,
+                    currency='RON',
+                    payment_methods='None'
+                )
             else:
-                payment.payment_type = 'Paid'
-                payment.fee = request.POST.get('fee', 0)
-                payment.currency = request.POST.get('currency', 'RON')
-                payment.payment_methods = request.POST.get('payment_methods')
-            
-            payment.save()
+                # Create a new custom Payment object
+                payment = Payment.objects.create(
+                    payment_type='Paid',
+                    fee=request.POST.get('fee', 0),
+                    currency=request.POST.get('currency', 'RON'),
+                    payment_methods=request.POST.get('payment_methods')
+                )
+
             spot.payment = payment
             spot.save()
-            
             return redirect('locations')
     else:
         form = LocationForm()
