@@ -40,15 +40,8 @@ def addspot(request):
             is_free = request.POST.get('is_free') == 'on'
 
             if is_free:
-                # Try to get an existing "Free" payment
-                payment, created = Payment.objects.get_or_create(
-                    payment_type='Free',
-                    fee=0,
-                    currency='RON',
-                    payment_methods='None'
-                )
+                payment = Payment.objects.get(_id="1")
             else:
-                # Create a new custom Payment object
                 payment = Payment.objects.create(
                     payment_type='Paid',
                     fee=request.POST.get('fee', 0),
