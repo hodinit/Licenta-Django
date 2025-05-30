@@ -30,4 +30,5 @@ urlpatterns = [
     path('logout/', acc_views.account_logout, name='logout'),
     path('locations/', views.location_list, name='locations'),
     path('addspot/', views.addspot, name='addspot'),
+    path('approve-spot/', views.approve_spot, name='approve_spot'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

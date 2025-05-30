@@ -42,7 +42,7 @@ if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
                 <div class="mt-2">
                     ${paymentInfo}
                 </div>
-                <a class="btn btn-success mt-3">Is this spot real?</a>
+                <a class="btn btn-success mt-3" onclick="approveSpot(${spot._id}, ${spot.approved})">Is this spot real?</a>
             </div>
         `;
 
@@ -51,6 +51,56 @@ if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
         .bindPopup(popupContent);
     });
 }    
+
+function approveSpot(spotId, currentApprovalStatus) {
+        const newApprovalStatus = !currentApprovalStatus;
+
+        fetch(approveSpotUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({
+                spot_id: spotId,
+                approved: newApprovalStatus
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                console.log("Spot approval updated successfully!");
+                
+                // Find and update the marker for this spot
+                Object.values(map._layers).forEach(layer => {
+                    if (layer instanceof L.Marker && layer.getLatLng) {
+                        const popup = layer.getPopup();
+                        if (popup && popup.getContent().includes(`approveSpot(${spotId}`)) {
+                            layer.setIcon(newApprovalStatus ? newSpotIcon : parkingIcon);
+                            
+                            // Update the popup content to reflect the new status
+                            const currentContent = popup.getContent();
+                            const updatedContent = currentContent.replace(
+                                `approveSpot(${spotId}, ${currentApprovalStatus})`,
+                                `approveSpot(${spotId}, ${newApprovalStatus})`
+                            );
+                            popup.setContent(updatedContent);
+                        }
+                    }
+                });
+            } else {
+                console.log("Error:", data.error);
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+    }
 
 function togglePaymentForm() {
     const isFree = document.getElementById('is_free').checked;

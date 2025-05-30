@@ -21,6 +21,8 @@
 
 <script>
     const parkingSpots = JSON.parse('{{ locations|escapejs }}');
+    const approveSpotUrl = '{% url "approve_spot" %}';
+    const csrfToken = '{{ csrf_token }}';
 </script>
 
 {% endblock %}

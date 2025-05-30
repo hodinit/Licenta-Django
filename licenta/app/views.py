@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Location, Payment
 from .forms import LocationForm
 import json
+from django.views.decorators.csrf import csrf_exempt
 
 def hello_world(request):
     return HttpResponse("hello, world")
@@ -12,6 +13,7 @@ def hello_world(request):
 def location_list(request):
     locations = Location.objects.all()
     locations_list = [{
+        '_id': loc._id,
         'name': loc.name,
         'latitude': loc.latitude, 
         'longitude': loc.longitude,
@@ -41,7 +43,7 @@ def addspot(request):
             new_location_id = 1 if last_location is None else last_location._id + 1
             spot._id = new_location_id
 
-            is_free = request.POST.get('is_free') == 'on'
+            is_free = request.POST.get('is_free')
 
             if is_free:
                 payment = Payment.objects.get(_id="1")
@@ -60,3 +62,38 @@ def addspot(request):
         form = LocationForm()
     
     return render(request, 'addspot.html', {'form': form})
+
+@csrf_exempt
+# def approve_spot(request):
+#     if request.method == 'POST':
+#         data = json.loads(request.body)
+#         spot_id = data.get('spot_id')
+#         try:
+#             location = Location.objects.get(_id=spot_id)
+#             location.approved = True
+#             location.save()
+#             return JsonResponse({'success': True})
+#         except Location.DoesNotExist:
+#             return JsonResponse({'success': False, 'error': 'Location not found'}, status=404)
+#     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
+
+def approve_spot(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            spot_id = data.get('spot_id')
+            approved = data.get('approved')
+
+            if spot_id is None or approved is None:
+                return JsonResponse({'success': False, 'error': 'Invalid data'}, status=400)
+
+            location = Location.objects.get(_id=spot_id)
+            location.approved = approved  # Set the new approval status
+            location.save()
+
+            return JsonResponse({'success': True})
+        except Location.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Location not found'}, status=404)
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
+    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
