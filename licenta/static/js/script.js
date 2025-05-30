@@ -138,18 +138,20 @@ navigator.geolocation.getCurrentPosition(function(position) {
         let shortestDistance = Infinity;
 
         parkingSpots.forEach(spot => {
-            const R = 6371;
-            const dLat = toRad(spot.latitude - userLat);
-            const dLon = toRad(spot.longitude - userLng);
-            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                     Math.cos(toRad(userLat)) * Math.cos(toRad(spot.latitude)) * 
-                     Math.sin(dLon/2) * Math.sin(dLon/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            const distance = R * c;
+            if (spot.approved == true) {
+                const R = 6371;
+                const dLat = toRad(spot.latitude - userLat);
+                const dLon = toRad(spot.longitude - userLng);
+                const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                         Math.cos(toRad(userLat)) * Math.cos(toRad(spot.latitude)) * 
+                         Math.sin(dLon/2) * Math.sin(dLon/2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                const distance = R * c;
 
-            if (distance < shortestDistance) {
-                shortestDistance = distance;
-                nearestSpot = spot;
+                if (distance < shortestDistance) {
+                    shortestDistance = distance;
+                    nearestSpot = spot;
+                }
             }
         });
         
