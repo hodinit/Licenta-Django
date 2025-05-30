@@ -25,7 +25,7 @@ const newSpotIcon = L.icon({
 
 if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
     parkingSpots.forEach(spot => {
-        const icon = spot.approved ? newSpotIcon : parkingIcon;
+        let icon = newSpotIcon;
         let paymentInfo = `<strong>Payment Type:</strong> ${spot.payment.payment_type}<br>`;
         
         if (spot.payment.payment_type != 'Free') {
@@ -45,6 +45,10 @@ if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
                 <a class="btn btn-success mt-3" onclick="approveSpot(${spot._id}, ${spot.approved})">Is this spot real?</a>
             </div>
         `;
+
+        if (spot.approved == true) {
+            icon = parkingIcon;
+        }
 
         L.marker([spot.latitude, spot.longitude], {icon: icon})
         .addTo(map)
