@@ -30,3 +30,12 @@ class Location(models.Model):
     class Meta:
         db_table = "locations"
 
+class ApprovalVote(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "approval_votes"
+        unique_together = ('user', 'location')
+

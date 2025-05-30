@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Location, Payment
+from .models import Location, Payment, ApprovalVote
 from .forms import LocationForm
 import json
 from django.views.decorators.csrf import csrf_exempt
@@ -77,21 +77,40 @@ def addspot(request):
 #             return JsonResponse({'success': False, 'error': 'Location not found'}, status=404)
 #     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
 
+@login_required
 def approve_spot(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
             spot_id = data.get('spot_id')
-            approved = data.get('approved')
 
-            if spot_id is None or approved is None:
+            if spot_id is None:
                 return JsonResponse({'success': False, 'error': 'Invalid data'}, status=400)
 
             location = Location.objects.get(_id=spot_id)
-            location.approved = approved  # Set the new approval status
-            location.save()
+            
+            # Check if user has already voted
+            if ApprovalVote.objects.filter(user=request.user, location=location).exists():
+                return JsonResponse({'success': False, 'error': 'You have already voted for this spot'}, status=400)
 
-            return JsonResponse({'success': True})
+            # Create new vote
+            ApprovalVote.objects.create(user=request.user, location=location)
+            
+            # Count total votes
+            vote_count = ApprovalVote.objects.filter(location=location).count()
+            
+            # If we have 2 or more votes, approve the spot
+            if vote_count >= 2:
+                location.approved = True
+                location.save()
+            
+            return JsonResponse({
+                'success': True, 
+                'approved': location.approved,
+                'voteCount': vote_count,
+                'hasVoted': True
+            })
+            
         except Location.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Location not found'}, status=404)
         except json.JSONDecodeError:
