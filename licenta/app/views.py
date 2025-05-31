@@ -18,13 +18,14 @@ def location_list(request):
             has_voted = ApprovalVote.objects.filter(user=request.user, location=loc).exists()
         
         location_data = {
-            '_id': str(loc._id),
+            '_id': loc._id,
             'name': loc.name,
             'latitude': loc.latitude, 
             'longitude': loc.longitude,
             'image': loc.image.url if loc.image and loc.image.name else None,
             'approved': loc.approved,
             'hasVoted': has_voted,
+            'isCreator': request.user == loc.added_by,
             'payment': {
                 'payment_type': loc.payment.payment_type,
                 'fee': str(loc.payment.fee),
@@ -82,10 +83,13 @@ def approve_spot(request):
                 return JsonResponse({'success': False, 'error': 'Invalid data'}, status=400)
 
             location = Location.objects.get(_id=spot_id)
-            
+              # Check if user is the creator
+            if location.added_by == request.user:
+                return JsonResponse({'success': False, 'error': 'Cannot vote on your own spot'}, status=400)
+
             # Check if user has already voted
             if ApprovalVote.objects.filter(user=request.user, location=location).exists():
-                return JsonResponse({'success': False, 'error': 'You have already voted for this spot'}, status=400)            # Get the last vote to determine the next ID
+                return JsonResponse({'success': False, 'error': 'You have already voted for this spot'}, status=400)# Get the last vote to determine the next ID
             last_vote = ApprovalVote.objects.order_by('-_id').first()
             new_vote_id = 1 if last_vote is None else last_vote._id + 1
             

@@ -44,9 +44,11 @@ if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
                 </div>
                 ${!spot.approved ? 
                     `<div class="mt-3">
-                        ${spot.hasVoted 
-                            ? `<button class="btn btn-secondary" disabled>Already voted</button>`
-                            : `<button class="btn btn-success" onclick="approveSpot(${spot._id}, ${spot.approved})">Is this spot real?</button>`
+                        ${spot.isCreator
+                            ? `<button class="btn btn-secondary" disabled>Spot added by you</button>`
+                            : spot.hasVoted 
+                                ? `<button class="btn btn-secondary" disabled>Already voted</button>`
+                                : `<button class="btn btn-success" onclick="approveSpot(${spot._id}, ${spot.approved})">Is this spot real?</button>`
                         }
                     </div>`
                     : ''}
@@ -66,7 +68,6 @@ if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
 function approveSpot(spotId, currentApprovalStatus) {
         const button = event.target;
         button.disabled = true;
-        button.textContent = 'Voting...';
 
         fetch(approveSpotUrl, {
             method: 'POST',
@@ -90,7 +91,6 @@ function approveSpot(spotId, currentApprovalStatus) {
                 button.disabled = true;
             } else {
                 button.disabled = false;
-                button.textContent = 'Is this spot real?';
                 console.log("Error:", data.error);
             }
         })
