@@ -91,10 +91,16 @@ def approve_spot(request):
             
             # Check if user has already voted
             if ApprovalVote.objects.filter(user=request.user, location=location).exists():
-                return JsonResponse({'success': False, 'error': 'You have already voted for this spot'}, status=400)
-
+                return JsonResponse({'success': False, 'error': 'You have already voted for this spot'}, status=400)            # Get the last vote to determine the next ID
+            last_vote = ApprovalVote.objects.order_by('-_id').first()
+            new_vote_id = 1 if last_vote is None else last_vote._id + 1
+            
             # Create new vote
-            ApprovalVote.objects.create(user=request.user, location=location)
+            ApprovalVote.objects.create(
+                _id=new_vote_id,
+                user=request.user, 
+                location=location
+            )
             
             # Count total votes
             vote_count = ApprovalVote.objects.filter(location=location).count()

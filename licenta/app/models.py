@@ -31,11 +31,11 @@ class Location(models.Model):
         db_table = "locations"
 
 class ApprovalVote(models.Model):
+    _id = models.IntegerField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = "approval_votes"
+        db_table = "spotvote"
         unique_together = ('user', 'location')
 
