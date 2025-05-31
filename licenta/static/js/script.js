@@ -82,28 +82,11 @@ function approveSpot(spotId, currentApprovalStatus) {
                 throw new Error('Network response was not ok');
             }
             return response.json();
-        })
-        .then(data => {
+        })        .then(data => {
             if (data.success) {
-                console.log("Spot approval updated successfully!");
-                
-                // Find and update the marker for this spot
-                Object.values(map._layers).forEach(layer => {
-                    if (layer instanceof L.Marker && layer.getLatLng) {
-                        const popup = layer.getPopup();
-                        if (popup && popup.getContent().includes(`approveSpot(${spotId}`)) {
-                            layer.setIcon(newApprovalStatus ? newSpotIcon : parkingIcon);
-                            
-                            // Update the popup content to reflect the new status
-                            const currentContent = popup.getContent();
-                            const updatedContent = currentContent.replace(
-                                `approveSpot(${spotId}, ${currentApprovalStatus})`,
-                                `approveSpot(${spotId}, ${newApprovalStatus})`
-                            );
-                            popup.setContent(updatedContent);
-                        }
-                    }
-                });
+                console.log("Vote recorded successfully!");
+                // Refresh the page
+                window.location.reload();
             } else {
                 console.log("Error:", data.error);
             }
