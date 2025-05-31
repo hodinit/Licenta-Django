@@ -64,7 +64,9 @@ if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
 }    
 
 function approveSpot(spotId, currentApprovalStatus) {
-        const newApprovalStatus = !currentApprovalStatus;
+        const button = event.target;
+        button.disabled = true;
+        button.textContent = 'Voting...';
 
         fetch(approveSpotUrl, {
             method: 'POST',
@@ -73,8 +75,7 @@ function approveSpot(spotId, currentApprovalStatus) {
                 'X-CSRFToken': csrfToken
             },
             body: JSON.stringify({
-                spot_id: spotId,
-                approved: newApprovalStatus
+                spot_id: spotId
             })
         })
         .then(response => {
@@ -84,10 +85,12 @@ function approveSpot(spotId, currentApprovalStatus) {
             return response.json();
         })        .then(data => {
             if (data.success) {
-                console.log("Vote recorded successfully!");
-                // Refresh the page
-                window.location.reload();
+                button.className = 'btn btn-secondary';
+                button.textContent = 'Vote recorded';
+                button.disabled = true;
             } else {
+                button.disabled = false;
+                button.textContent = 'Is this spot real?';
                 console.log("Error:", data.error);
             }
         })
