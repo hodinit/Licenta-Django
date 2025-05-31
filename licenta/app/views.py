@@ -1,31 +1,38 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from .models import Location, Payment, ApprovalVote
 from .forms import LocationForm
 import json
-from django.views.decorators.csrf import csrf_exempt
 
 def hello_world(request):
     return HttpResponse("hello, world")
 
 def location_list(request):
     locations = Location.objects.all()
-    locations_list = [{
-        '_id': loc._id,
-        'name': loc.name,
-        'latitude': loc.latitude, 
-        'longitude': loc.longitude,
-        'image': loc.image.url if loc.image and loc.image.name else None,
-        'approved': loc.approved,
-        'payment': {
-            'payment_type': loc.payment.payment_type,
-            'fee': str(loc.payment.fee),
-            'currency': loc.payment.currency,
-            'payment_methods': loc.payment.payment_methods
+    locations_list = []
+    
+    for loc in locations:
+        has_voted = False
+        if request.user.is_authenticated:
+            has_voted = ApprovalVote.objects.filter(user=request.user, location=loc).exists()
+        
+        location_data = {
+            '_id': str(loc._id),
+            'name': loc.name,
+            'latitude': loc.latitude, 
+            'longitude': loc.longitude,
+            'image': loc.image.url if loc.image and loc.image.name else None,
+            'approved': loc.approved,
+            'hasVoted': has_voted,
+            'payment': {
+                'payment_type': loc.payment.payment_type,
+                'fee': str(loc.payment.fee),
+                'currency': loc.payment.currency,
+                'payment_methods': loc.payment.payment_methods
+            }
         }
-    } for loc in locations]
+        locations_list.append(location_data)
     return render(request, 'locations.html', {'locations': json.dumps(locations_list)})
 
 def homepage(request):
@@ -63,24 +70,11 @@ def addspot(request):
     
     return render(request, 'addspot.html', {'form': form})
 
-@csrf_exempt
-# def approve_spot(request):
-#     if request.method == 'POST':
-#         data = json.loads(request.body)
-#         spot_id = data.get('spot_id')
-#         try:
-#             location = Location.objects.get(_id=spot_id)
-#             location.approved = True
-#             location.save()
-#             return JsonResponse({'success': True})
-#         except Location.DoesNotExist:
-#             return JsonResponse({'success': False, 'error': 'Location not found'}, status=404)
-#     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
-
 @login_required
 def approve_spot(request):
     if request.method == 'POST':
         try:
+            
             data = json.loads(request.body)
             spot_id = data.get('spot_id')
 

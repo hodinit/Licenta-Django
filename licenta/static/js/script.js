@@ -42,7 +42,14 @@ if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
                 <div class="mt-2">
                     ${paymentInfo}
                 </div>
-                <a class="btn btn-success mt-3" onclick="approveSpot(${spot._id}, ${spot.approved})">Is this spot real?</a>
+                ${!spot.approved ? 
+                    `<div class="mt-3">
+                        ${spot.hasVoted 
+                            ? `<button class="btn btn-secondary" disabled>Already voted</button>`
+                            : `<button class="btn btn-success" onclick="approveSpot(${spot._id}, ${spot.approved})">Is this spot real?</button>`
+                        }
+                    </div>`
+                    : ''}
             </div>
         `;
 
