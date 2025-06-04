@@ -6,10 +6,23 @@
 
 {% block content %}
 
+<style>
+    #map {
+        width: 100vw;
+        height: calc(100vh - 56px);
+        position: fixed;
+        top: 38px;
+        left: 0;
+    }
+</style>
+
 <div id="map"></div>
+<button id="toggleRoute" class="btn btn-primary">Hide Route</button>
 
 <script>
     const parkingSpots = JSON.parse('{{ locations|escapejs }}');
+    const approveSpotUrl = '{% url "approve_spot" %}';
+    const csrfToken = '{{ csrf_token }}';
 </script>
 
 {% endblock %}
