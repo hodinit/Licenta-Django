@@ -100,10 +100,8 @@ def approve_spot(request):
                 location=location
             )
             
-            # Count total votes
             vote_count = ApprovalVote.objects.filter(location=location).count()
             
-            # If we have 2 or more votes, approve the spot
             if vote_count >= 2:
                 location.approved = True
                 location.save()

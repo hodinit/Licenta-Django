@@ -38,7 +38,7 @@ if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
         const popupContent = `
             <div class="container text-center">
                 <h4>${spot.name}</h4>
-                <img src="${spot.image}" alt="Location Image" style="width: 100px; height: auto;" /><br>
+                <img src="${spot.image}" alt="Location Image" style="width: 200px; height: auto;" /><br>
                 <div class="mt-2">
                     ${paymentInfo}
                 </div>
