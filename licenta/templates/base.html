@@ -17,30 +17,60 @@
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
     <title>{% block title %} Homepage {% endblock %} </title>
 </head>
-<body>        <nav class="navbar navbar-dark bg-dark position-relative">
+<body>          <nav class="navbar navbar-expand-md navbar-dark bg-dark position-relative">
         <div class="container-fluid">
-            <div class="dropdown">
-                <button class="btn btn-dark dropdown-toggle" type="button" id="menuDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    &#9776; <!-- Unicode for hamburger icon -->
-                </button>
-                <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="menuDropdown">
-                    <li><a class="dropdown-item" href="{% url 'homepage' %}">Homepage</a></li>
-                    <li><a class="dropdown-item" href="{% url 'locations' %}">Find Parking</a></li>
-                    <li><a class="dropdown-item" href="{% url 'addspot' %}">Add Spot</a></li>
-                    <li><a class="dropdown-item" href="{% url 'about' %}">About</a></li>
-                </ul>
-            </div>
-
+            <!-- Hamburger menu for small screens -->
+            <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+              <!-- Brand always centered -->
             <div class="position-absolute top-50 start-50 translate-middle">
                 <a class="navbar-brand m-0" href="{% url 'homepage' %}">Find my spot</a>
             </div>
             
-            <div class="d-flex ms-auto">
+            <!-- Navigation links that collapse on small screens -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'homepage' %}">Homepage</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'locations' %}">Find Parking</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'addspot' %}">Add Spot</a>
+                    </li>                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about' %}">About</a>
+                    </li>
+                </ul>
+                
+                <!-- Auth links (collapse on small screens) -->
+                <ul class="navbar-nav d-md-none">
+                    <li class="my-2"><hr class="dropdown-divider"></li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <span class="nav-link">Welcome, {{ user.username }}!</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Log out</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Log in</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+              <!-- Auth links (visible only on medium screens and up) -->
+            <div class="d-none d-md-flex ms-auto">
                 {% if user.is_authenticated %}
-                    <span class="nav-item nav-link text-white">Welcome, {{ user.username }}!</span>
+                    <span class="nav-item nav-link text-white me-5">Welcome, {{ user.username }}!</span>
                     <a class="nav-item nav-link text-white" href="{% url 'logout' %}">Log out</a>
                 {% else %}
-                    <a class="nav-item nav-link text-white" href="{% url 'login' %}">Log in</a>
+                    <a class="nav-item nav-link text-white me-2" href="{% url 'login' %}">Log in</a>
                     <a class="nav-item nav-link text-white" href="{% url 'signup' %}">Sign Up</a>
                 {% endif %}
             </div>
