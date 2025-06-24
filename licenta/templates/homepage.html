@@ -4,7 +4,10 @@
 
     <div class="container text-center mt-5">
         <dotlottie-player src="https://lottie.host/7dac2b49-0e6a-475a-81ef-eee3ba69aea0/3i2dDoV8F0.lottie" background="transparent" speed="1" style="width: 300px; height: 300px; margin: 0 auto;" loop autoplay></dotlottie-player>
+        <br>
         <h1 class="mb-4">Find my spot</h1>
+        <br>
+        <br>
         <div class="d-flex flex-column align-items-center">
             {% if user.is_authenticated %}
                 <a class="btn btn-primary btn-lg mb-3 w-50" href="{% url 'logout' %}" role="button">Log out</a>
@@ -14,6 +17,7 @@
             {% endif %}
             <a class="btn btn-secondary btn-lg mb-3 w-50" href="{% url 'locations' %}" role="button">Find Nearest Spot</a>
             <a class="btn btn-secondary btn-lg mb-3 w-50" href="{% url 'addspot' %}" role="button">Add Spot</a>
+            <p>---------</p>
             <a class="btn btn-secondary btn-lg mb-3 w-50" href="{% url 'about' %}" role="button">About</a>
         </div>
     </div>
