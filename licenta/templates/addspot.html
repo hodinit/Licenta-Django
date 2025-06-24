@@ -22,7 +22,6 @@
                 <div id="map"></div>
                 <input type="hidden" id="latitude" name="latitude" required value="{{ form.latitude.value|default:'' }}">
                 <input type="hidden" id="longitude" name="longitude" required value="{{ form.longitude.value|default:'' }}">
-                <small class="text-muted">Click on the map to set the location or use your current location</small>
             </div>
             <button type="button" class="btn btn-primary mb-3" onclick="useCurrentLocation()">Use My Location</button>
 

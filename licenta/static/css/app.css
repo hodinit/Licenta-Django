@@ -5,6 +5,29 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
     min-height: 100vh;
+    font-family: 'Russo One';
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Boldonse';
+    color: aliceblue;
+}
+
+.navbar-brand {
+    font-family: 'Boldonse';
+    font-weight: bold;
+}
+
+.btn {
+    font-family: 'Russo One';
+}
+
+.form-label {
+    color: white;
+}
+
+.form-check-label {
+    color: white;
 }
 
 #map {
