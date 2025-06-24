@@ -1,3 +1,12 @@
+body {
+    background-image: url('../14966546391_963e58415e_b.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
 #map {
     height: 500px;
     width: 100%;
@@ -25,3 +34,7 @@
     border-radius: 20px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
+
+/* 7D8CC4
+
+A0D2DB */
