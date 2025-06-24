@@ -39,6 +39,9 @@ def location_list(request):
 def homepage(request):
     return render(request, 'homepage.html')
 
+def about(request):
+    return render(request, 'about.html')
+
 @login_required
 def addspot(request):
     if request.method == 'POST':
