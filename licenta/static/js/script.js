@@ -31,7 +31,7 @@ if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
         if (spot.payment.payment_type != 'Free') {
             paymentInfo += `
                 <strong>Fee:</strong> ${spot.payment.fee} ${spot.payment.currency}<br>
-                <strong>Payment Methods:</strong> ${spot.payment.payment_methods}
+                <strong>Payment Method:</strong> ${spot.payment.payment_methods}
             `;
         }
 

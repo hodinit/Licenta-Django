@@ -17,6 +17,11 @@ h1, h2, h3, h5, h6 {
 .navbar-brand {
     font-family: 'Boldonse';
     font-weight: bold;
+    color: white;
+}
+
+.navbar-brand:hover {
+    color: rgb(175, 175, 175);
 }
 
 .btn {
@@ -41,14 +46,6 @@ h1, h2, h3, h5, h6 {
 .btn-secondary:hover{
     background-color:#66858b;
     border-color: #66858b;
-}
-
-.navbar-brand {
-    color: white;
-}
-
-.navbar-brand:hover {
-    color: rgb(177, 177, 177);
 }
 
 #map {
