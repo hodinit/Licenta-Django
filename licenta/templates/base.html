@@ -17,7 +17,8 @@
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
     <title>{% block title %} Homepage {% endblock %} </title>
 </head>
-<body>          <nav class="navbar navbar-expand-md navbar-dark bg-dark position-relative">
+<body>          
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark position-relative py-3">
         <div class="container-fluid">
             <!-- Hamburger menu for small screens -->
             <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,7 +26,7 @@
             </button>
               <!-- Brand always centered -->
             <div class="position-absolute top-50 start-50 translate-middle">
-                <a class="navbar-brand m-0" href="{% url 'homepage' %}">Find my spot</a>
+                <a class="navbar-brand m-0" href="{% url 'locations' %}">Find my spot</a>
             </div>
             
             <!-- Navigation links that collapse on small screens -->
@@ -35,16 +36,13 @@
                         <a class="nav-link" href="{% url 'homepage' %}">Homepage</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'locations' %}">Find Parking</a>
+                        <a class="nav-link" href="{% url 'addspot' %}">Add Spot</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'addspot' %}">Add Spot</a>
-                    </li>                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'about' %}">About</a>
                     </li>
                 </ul>
                 
-                <!-- Auth links (collapse on small screens) -->
                 <ul class="navbar-nav d-md-none">
                     <li class="my-2"><hr class="dropdown-divider"></li>
                     {% if user.is_authenticated %}
@@ -64,14 +62,13 @@
                     {% endif %}
                 </ul>
             </div>
-              <!-- Auth links (visible only on medium screens and up) -->
             <div class="d-none d-md-flex ms-auto">
                 {% if user.is_authenticated %}
-                    <span class="nav-item nav-link text-white me-5">Welcome, {{ user.username }}!</span>
-                    <a class="nav-item nav-link text-white" href="{% url 'logout' %}">Log out</a>
+                    <span class="nav-item nav-link me-5">Welcome, {{ user.username }}!</span>
+                    <a class="nav-item nav-link" href="{% url 'logout' %}">Log out</a>
                 {% else %}
-                    <a class="nav-item nav-link text-white me-2" href="{% url 'login' %}">Log in</a>
-                    <a class="nav-item nav-link text-white" href="{% url 'signup' %}">Sign Up</a>
+                    <a class="nav-item nav-link" href="{% url 'login' %}">Log in</a>
+                    <a class="nav-item nav-link" href="{% url 'signup' %}">Sign Up</a>
                 {% endif %}
             </div>
         </div>
