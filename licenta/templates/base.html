@@ -67,7 +67,7 @@
                     <span class="nav-item nav-link me-5">Welcome, {{ user.username }}!</span>
                     <a class="nav-item nav-link" href="{% url 'logout' %}">Log out</a>
                 {% else %}
-                    <a class="nav-item nav-link" href="{% url 'login' %}">Log in</a>
+                    <a class="nav-item nav-link me-5" href="{% url 'login' %}">Log in</a>
                     <a class="nav-item nav-link" href="{% url 'signup' %}">Sign Up</a>
                 {% endif %}
             </div>

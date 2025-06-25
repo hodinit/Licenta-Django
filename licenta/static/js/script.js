@@ -178,6 +178,13 @@ navigator.geolocation.getCurrentPosition(function(position) {
                 }
                 isRouteVisible = !isRouteVisible;
             });
+            
+            const refreshButton = document.getElementById('refreshPage');
+            refreshButton.style.display = 'block';
+            
+            refreshButton.addEventListener('click', function() {
+                location.reload();
+            });
         }
     }
 });

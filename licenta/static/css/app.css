@@ -58,7 +58,18 @@ h1, h2, h3, h5, h6 {
     position: fixed;
     bottom: 20px;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-90%);
+    z-index: 1000;
+    padding: 10px 20px;
+    border-radius: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+#refreshPage {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(30%);
     z-index: 1000;
     padding: 10px 20px;
     border-radius: 20px;

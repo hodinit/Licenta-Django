@@ -19,10 +19,15 @@
     .navbar {
         z-index: 1000;
     }
+    
+    .leaflet-routing-container {
+        display: none;
+    }
 </style>
 
 <div id="map"></div>
 <button id="toggleRoute" class="btn btn-primary">Hide Route</button>
+<button id="refreshPage" class="btn btn-secondary">Update Map</button>
 
 <script>
     const parkingSpots = JSON.parse('{{ locations|escapejs }}');
