@@ -123,7 +123,7 @@ navigator.geolocation.getCurrentPosition(function(position) {
     
     const userMarker = L.marker([userLat, userLng], {icon: userIcon})
         .addTo(map)
-        .bindPopup('Current location')
+        .bindPopup(`<strong>Current Location</strong>`)
         .openPopup();
 
     if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
@@ -154,7 +154,8 @@ navigator.geolocation.getCurrentPosition(function(position) {
                     L.latLng(userLat, userLng),
                     L.latLng(nearestSpot.latitude, nearestSpot.longitude)
                 ],
-                show: false,
+                show: true,
+                collapsible: true,
                 draggableWaypoints: false,
                 routeWhileDragging: false,
                 addWaypoints: false,

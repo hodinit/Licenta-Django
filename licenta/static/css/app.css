@@ -58,7 +58,7 @@ h1, h2, h3, h5, h6 {
     position: fixed;
     bottom: 20px;
     left: 50%;
-    transform: translateX(-90%);
+    transform: translateX(-115%);
     z-index: 1000;
     padding: 10px 20px;
     border-radius: 20px;
@@ -69,7 +69,7 @@ h1, h2, h3, h5, h6 {
     position: fixed;
     bottom: 20px;
     left: 50%;
-    transform: translateX(30%);
+    transform: translateX(10%);
     z-index: 1000;
     padding: 10px 20px;
     border-radius: 20px;
