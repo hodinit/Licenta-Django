@@ -48,7 +48,7 @@ if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
                             ? `<button class="btn btn-secondary" disabled>Spot added by you</button>`
                             : spot.hasVoted 
                                 ? `<button class="btn btn-secondary" disabled>Already voted</button>`
-                                : `<button class="btn btn-success" onclick="approveSpot(${spot._id}, ${spot.approved})">Is this spot real?</button>`
+                                : `<button class="btn btn-success" onclick="approveSpot(${spot._id})">Is this spot real?</button>`
                         }
                     </div>`
                     : ''}
@@ -65,44 +65,30 @@ if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
     });
 }    
 
-function approveSpot(spotId, currentApprovalStatus) {
-        const button = event.target;
-        button.disabled = true;
+function approveSpot(spotId) {
+    const button = event.target;
+    button.disabled = true;
 
-        fetch(approveSpotUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken
-            },
-            body: JSON.stringify({
-                spot_id: spotId
-            })
+    fetch(approveSpotUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify({
+            spot_id: spotId
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })        .then(data => {
-            if (data.success) {
-                button.className = 'btn btn-secondary';
-                button.textContent = 'Vote recorded';
-                button.disabled = true;
-            } else {
-                button.disabled = false;
-                console.log("Error:", data.error);
-            }
-        })
-        .catch(error => {
-            console.error("Error:", error);
-        });
-    }
-
-function togglePaymentForm() {
-    const isFree = document.getElementById('is_free').checked;
-    const paymentForm = document.getElementById('paymentForm');
-    paymentForm.style.display = isFree ? 'none' : 'block';
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            button.className = 'btn btn-secondary';
+            button.textContent = 'Vote recorded';
+            button.disabled = true;
+        } else {
+            button.disabled = false;
+        }
+    });
 }
 
 const locationAlert = document.getElementById('locationAlert');
