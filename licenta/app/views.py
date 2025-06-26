@@ -26,6 +26,7 @@ def location_list(request):
             'approved': loc.approved,
             'hasVoted': has_voted,
             'isCreator': request.user == loc.added_by,
+            'is_logged_in': request.user.is_authenticated,
             'payment': {
                 'payment_type': loc.payment.payment_type,
                 'fee': str(loc.payment.fee),
@@ -77,47 +78,39 @@ def addspot(request):
 @login_required
 def approve_spot(request):
     if request.method == 'POST':
-        try:
-            
-            data = json.loads(request.body)
-            spot_id = data.get('spot_id')
+        data = json.loads(request.body)
+        spot_id = data.get('spot_id')
 
-            if spot_id is None:
-                return JsonResponse({'success': False, 'error': 'Invalid data'}, status=400)
+        if spot_id is None:
+            return JsonResponse({'success': False}, status=400)
+            
+        location = Location.objects.get(_id=spot_id)
+        if location.added_by == request.user:
+            return JsonResponse({'success': False}, status=400)
 
-            location = Location.objects.get(_id=spot_id)
-              # Check if user is the creator
-            if location.added_by == request.user:
-                return JsonResponse({'success': False, 'error': 'Cannot vote on your own spot'}, status=400)
-
-            # Check if user has already voted
-            if ApprovalVote.objects.filter(user=request.user, location=location).exists():
-                return JsonResponse({'success': False, 'error': 'You have already voted for this spot'}, status=400)# Get the last vote to determine the next ID
-            last_vote = ApprovalVote.objects.order_by('-_id').first()
-            new_vote_id = 1 if last_vote is None else last_vote._id + 1
+        if ApprovalVote.objects.filter(user=request.user, location=location).exists():
+            return JsonResponse({'success': False}, status=400)
             
-            # Create new vote
-            ApprovalVote.objects.create(
-                _id=new_vote_id,
-                user=request.user, 
-                location=location
-            )
-            
-            vote_count = ApprovalVote.objects.filter(location=location).count()
-            
-            if vote_count >= 2:
-                location.approved = True
-                location.save()
-            
-            return JsonResponse({
-                'success': True, 
-                'approved': location.approved,
-                'voteCount': vote_count,
-                'hasVoted': True
-            })
-            
-        except Location.DoesNotExist:
-            return JsonResponse({'success': False, 'error': 'Location not found'}, status=404)
-        except json.JSONDecodeError:
-            return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
-    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
+        last_vote = ApprovalVote.objects.order_by('-_id').first()
+        new_vote_id = 1 if last_vote is None else last_vote._id + 1
+        
+        ApprovalVote.objects.create(
+            _id=new_vote_id,
+            user=request.user, 
+            location=location
+        )
+        
+        vote_count = ApprovalVote.objects.filter(location=location).count()
+        
+        if vote_count >= 2:
+            location.approved = True
+            location.save()
+        
+        return JsonResponse({
+            'success': True, 
+            'approved': location.approved,
+            'voteCount': vote_count,
+            'hasVoted': True
+        })
+    
+    return JsonResponse({'success': False}, status=400)

@@ -42,7 +42,7 @@ if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
                 <div class="mt-2">
                     ${paymentInfo}
                 </div>
-                ${!spot.approved ? 
+                ${spot.approved == false && spot.is_logged_in == true ? 
                     `<div class="mt-3">
                         ${spot.isCreator
                             ? `<button class="btn btn-secondary" disabled>Spot added by you</button>`
