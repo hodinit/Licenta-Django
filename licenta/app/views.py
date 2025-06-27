@@ -5,9 +5,6 @@ from .models import Location, Payment, ApprovalVote
 from .forms import LocationForm
 import json
 
-def hello_world(request):
-    return HttpResponse("hello, world")
-
 def location_list(request):
     locations = Location.objects.all()
     locations_list = []
@@ -22,14 +19,15 @@ def location_list(request):
             'name': loc.name,
             'latitude': loc.latitude, 
             'longitude': loc.longitude,
-            'image': loc.image.url if loc.image and loc.image.name else None,
+            'image': loc.image.url if loc.image else None,
+            'description': loc.description,
             'approved': loc.approved,
             'hasVoted': has_voted,
             'isCreator': request.user == loc.added_by,
-            'is_logged_in': request.user.is_authenticated,
+            'isLoggedIn': request.user.is_authenticated,
             'payment': {
                 'payment_type': loc.payment.payment_type,
-                'fee': str(loc.payment.fee),
+                'fee': loc.payment.fee,
                 'currency': loc.payment.currency,
                 'payment_methods': loc.payment.payment_methods
             }

@@ -23,6 +23,16 @@ const newSpotIcon = L.icon({
     popupAnchor: [1, -34],
 });
 
+const locationAlert = document.getElementById('locationAlert');
+locationAlert.style.display = 'block';
+
+const refreshButton = document.getElementById('refreshPage');
+refreshButton.style.display = 'block';
+refreshButton.addEventListener('click', function() {
+    window.location.reload();
+});
+
+
 if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
     parkingSpots.forEach(spot => {
         let icon = newSpotIcon;
@@ -39,16 +49,17 @@ if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
             <div class="container text-center">
                 <h4>${spot.name}</h4>
                 <img src="${spot.image}" alt="Location Image" style="width: 200px; height: auto;" /><br>
+                <p>${spot.description}</p>
                 <div class="mt-2">
                     ${paymentInfo}
                 </div>
-                ${spot.approved == false && spot.is_logged_in == true ? 
+                ${spot.approved == false && spot.isLoggedIn == true ? 
                     `<div class="mt-3">
                         ${spot.isCreator
                             ? `<button class="btn btn-secondary" disabled>Spot added by you</button>`
                             : spot.hasVoted 
                                 ? `<button class="btn btn-secondary" disabled>Already voted</button>`
-                                : `<button class="btn btn-success" onclick="approveSpot(${spot._id})">Is this spot real?</button>`
+                                : `<button class="btn btn-success" onclick="approveSpot(event, ${spot._id})">Is this spot real?</button>`
                         }
                     </div>`
                     : ''}
@@ -65,7 +76,7 @@ if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
     });
 }    
 
-function approveSpot(spotId) {
+function approveSpot(event, spotId) {
     const button = event.target;
     button.disabled = true;
 
@@ -91,26 +102,24 @@ function approveSpot(spotId) {
     });
 }
 
-const locationAlert = document.getElementById('locationAlert');
-if (locationAlert) {
-    locationAlert.style.display = 'block';
-}
-
-navigator.geolocation.getCurrentPosition(function(position) {
+navigator.geolocation.getCurrentPosition(position => {
     
     const userLat = position.coords.latitude;
     const userLng = position.coords.longitude;
     
     map.setView([userLat, userLng], 15);
     
-    if (locationAlert) {
-        locationAlert.style.display = 'none';
-    }
+    locationAlert.style.display = 'none';
     
     const userMarker = L.marker([userLat, userLng], {icon: userIcon})
         .addTo(map)
         .bindPopup(`<strong>Current Location</strong>`)
         .openPopup();
+        
+    window.lastKnownPosition = {
+        latitude: userLat,
+        longitude: userLng
+    };
 
     if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
         let nearestSpot = null;
@@ -165,13 +174,6 @@ navigator.geolocation.getCurrentPosition(function(position) {
                 }
                 isRouteVisible = !isRouteVisible;
             });
-            
-            const refreshButton = document.getElementById('refreshPage');
-            refreshButton.style.display = 'block';
-            
-            refreshButton.addEventListener('click', function() {
-                location.reload();
-            });
         }
     }
 });
@@ -191,22 +193,16 @@ function setLocation(lat, lng) {
     map.setView([lat, lng], 15);
 }
 
-map.on('click', function(spot) {
+map.on('click', spot => {
     setLocation(spot.latlng.lat, spot.latlng.lng);
 });
 
 function useCurrentLocation() {
-    const locationAlert = document.getElementById('locationAlert');
-    if (locationAlert) {
-        locationAlert.style.display = 'block';
+    locationAlert.style.display = 'block';
+    if (window.lastKnownPosition) {
+        locationAlert.style.display = 'none';
+        setLocation(window.lastKnownPosition.latitude, window.lastKnownPosition.longitude);
     }
+} 
 
-    navigator.geolocation.getCurrentPosition(
-        function(position) {
-            if (locationAlert) {
-                locationAlert.style.display = 'none';
-            }
-            setLocation(position.coords.latitude, position.coords.longitude);
-        }
-    );
-}
+

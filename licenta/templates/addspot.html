@@ -21,8 +21,8 @@
             <div class="mb-3">
                 <label class="form-label">Location</label>
                 <div id="map"></div>
-                <input type="hidden" id="latitude" name="latitude" required value="{{ form.latitude.value|default:'' }}">
-                <input type="hidden" id="longitude" name="longitude" required value="{{ form.longitude.value|default:'' }}">
+                <input type="hidden" id="latitude" name="latitude" required value="{{ form.latitude.value }}">
+                <input type="hidden" id="longitude" name="longitude" required value="{{ form.longitude.value }}">
             </div>
             <button type="button" class="btn btn-primary mb-3" onclick="useCurrentLocation()">Use My Location</button>
 
@@ -37,16 +37,6 @@
                 <input type="file" class="form-control" 
                        id="image" name="image" accept="image/*" >
                 <img id="preview" class="preview-image d-none">
-            </div>
-
-            <div class="mb-3">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="available" 
-                           name="available" {% if form.available.value %}checked{% endif %}>
-                    <label class="form-check-label" for="available">
-                        Spot is currently available
-                    </label>
-                </div>
             </div>
 
             <div class="mb-3">
