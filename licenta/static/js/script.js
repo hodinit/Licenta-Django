@@ -92,9 +92,7 @@ function approveSpot(spotId) {
 }
 
 const locationAlert = document.getElementById('locationAlert');
-if (locationAlert) {
-    locationAlert.style.display = 'block';
-}
+locationAlert.style.display = 'block';
 
 navigator.geolocation.getCurrentPosition(function(position) {
     
@@ -106,9 +104,7 @@ navigator.geolocation.getCurrentPosition(function(position) {
     
     map.setView([userLat, userLng], 15);
     
-    if (locationAlert) {
-        locationAlert.style.display = 'none';
-    }
+    locationAlert.style.display = 'none';
     
     const userMarker = L.marker([userLat, userLng], {icon: userIcon})
         .addTo(map)
