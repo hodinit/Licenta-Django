@@ -23,16 +23,6 @@ const newSpotIcon = L.icon({
     popupAnchor: [1, -34],
 });
 
-const locationAlert = document.getElementById('locationAlert');
-locationAlert.style.display = 'block';
-
-const refreshButton = document.getElementById('refreshPage');
-refreshButton.style.display = 'block';
-refreshButton.addEventListener('click', function() {
-    window.location.reload();
-});
-
-
 if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
     parkingSpots.forEach(spot => {
         let icon = newSpotIcon;
@@ -59,7 +49,7 @@ if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
                             ? `<button class="btn btn-secondary" disabled>Spot added by you</button>`
                             : spot.hasVoted 
                                 ? `<button class="btn btn-secondary" disabled>Already voted</button>`
-                                : `<button class="btn btn-success" onclick="approveSpot(event, ${spot._id})">Is this spot real?</button>`
+                                : `<button class="btn btn-success" onclick="approveSpot(${spot._id})">Is this spot real?</button>`
                         }
                     </div>`
                     : ''}
@@ -76,9 +66,8 @@ if (typeof parkingSpots !== 'undefined' && parkingSpots.length) {
     });
 }    
 
-function approveSpot(event, spotId) {
+function approveSpot(spotId) {
     const button = event.target;
-    button.disabled = true;
 
     fetch(approveSpotUrl, {
         method: 'POST',
@@ -102,20 +91,30 @@ function approveSpot(event, spotId) {
     });
 }
 
-navigator.geolocation.getCurrentPosition(position => {
+const locationAlert = document.getElementById('locationAlert');
+if (locationAlert) {
+    locationAlert.style.display = 'block';
+}
+
+navigator.geolocation.getCurrentPosition(function(position) {
     
     const userLat = position.coords.latitude;
     const userLng = position.coords.longitude;
     
+    localStorage.setItem('userLat', userLat);
+    localStorage.setItem('userLng', userLng);
+    
     map.setView([userLat, userLng], 15);
     
-    locationAlert.style.display = 'none';
+    if (locationAlert) {
+        locationAlert.style.display = 'none';
+    }
     
     const userMarker = L.marker([userLat, userLng], {icon: userIcon})
         .addTo(map)
         .bindPopup(`<strong>Current Location</strong>`)
         .openPopup();
-        
+
     window.lastKnownPosition = {
         latitude: userLat,
         longitude: userLng
@@ -174,6 +173,13 @@ navigator.geolocation.getCurrentPosition(position => {
                 }
                 isRouteVisible = !isRouteVisible;
             });
+            
+            const refreshButton = document.getElementById('refreshPage');
+            refreshButton.style.display = 'block';
+            
+            refreshButton.addEventListener('click', function() {
+                location.reload();
+            });
         }
     }
 });
@@ -193,16 +199,22 @@ function setLocation(lat, lng) {
     map.setView([lat, lng], 15);
 }
 
-map.on('click', spot => {
+map.on('click', function(spot) {
     setLocation(spot.latlng.lat, spot.latlng.lng);
 });
 
 function useCurrentLocation() {
     locationAlert.style.display = 'block';
     if (window.lastKnownPosition) {
-        locationAlert.style.display = 'none';
         setLocation(window.lastKnownPosition.latitude, window.lastKnownPosition.longitude);
+        locationAlert.style.display = 'none';
+    }
+    else if (localStorage.getItem('userLat') && localStorage.getItem('userLng')) {
+        locationAlert.style.display = 'none';
+        setLocation(
+            parseFloat(localStorage.getItem('userLat')), 
+            parseFloat(localStorage.getItem('userLng'))
+        );
     }
 } 
-
 
